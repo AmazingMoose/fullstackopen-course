@@ -1,39 +1,37 @@
-const PersonForm = () => {
-    const [newName, setNewName] = useState('')
-    const [newNumber, setNewNumber] = useState('')
+import React from 'react'
+import PropTypes from 'prop-types'
 
-    const handleNameChange = event => setNewName(event.target.value)
-    const handleNumberChange = event => setNewNumber(event.target.value)
-
-    const addPerson = (event) => {
-        event.preventDefault()
-        for (const person of persons) {
-          if (person.name === newName) {
-            alert(`${newName} is already added to phonebook`)
-            return
-          }
-        }
-        setPersons(persons.concat({
-          name: newName,
-          number: newNumber,
-          id: persons.length + 1
-        }))
-    }
-
-    return (
-        <div>
-            <h2>add a new</h2>
-            <form onSubmit={addPerson}>
-                <div>
-                name: <input value={newName} onChange={handleNameChange}/>
-                </div>
-                <div>
-                number: <input value={newNumber} onChange={handleNumberChange}/>
-                </div>
-                <div>
-                <button type="submit">add</button>
-                </div>
-            </form>
-        </div>
-    )
+const PersonForm = ({
+  onSubmit, 
+  newName, 
+  onNameChange, 
+  newNumber, 
+  onNumberChange
+}) => {
+  return (
+      <div>
+          <h2>add a new</h2>
+          <form onSubmit={onSubmit}>
+              <div>
+              name: <input value={newName} onChange={onNameChange}/>
+              </div>
+              <div>
+              number: <input value={newNumber} onChange={onNumberChange}/>
+              </div>
+              <div>
+              <button type="submit">add</button>
+              </div>
+          </form>
+      </div>
+  )
 }
+
+PersonForm.propTypes = {
+  onSubmit: PropTypes.func,
+  newName: PropTypes.string,
+  onNameChange: PropTypes.func,
+  newNumber: PropTypes.string,
+  onNumberChange: PropTypes.func
+}
+
+export default PersonForm
