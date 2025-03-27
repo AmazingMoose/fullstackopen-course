@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
@@ -13,6 +14,17 @@ const App = () => {
   const handleNameChange = event => setNewName(event.target.value)
   const handleNumberChange = event => setNewNumber(event.target.value)
   const handleFilterChange = event => setFilter(event.target.value)
+
+  const phonebookHook = () => {
+    console.log('effect')
+    axios.get('http://localhost:3001/persons').then(response => {
+      setPersons(response.data)
+      console.log('effect fullfilled')
+    })
+  }
+
+  useEffect(phonebookHook, [])
+  console.log(persons)
 
   const addPerson = (event) => {
     event.preventDefault()
