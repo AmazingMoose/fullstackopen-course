@@ -28,7 +28,7 @@ const PersonForm = ({
 
 PersonForm.propTypes = {
   onSubmit: PropTypes.func,
-  newName: PropTypes.string,
+  newPerson: PropTypes.string,
   onNameChange: PropTypes.func,
   newNumber: PropTypes.string,
   onNumberChange: PropTypes.func

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
@@ -15,20 +14,15 @@ const App = () => {
   const handleNumberChange = event => setNewNumber(event.target.value)
   const handleFilterChange = event => setFilter(event.target.value)
 
-  const phonebookHook = () => {
-    console.log('effect')
-    axios.get('http://localhost:3001/persons').then(response => {
-      setPersons(response.data)
-      console.log('effect fullfilled')
-    })
-  }
-
-  useEffect(phonebookHook, [])
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(allPersons => setPersons(allPersons))
+  }, [])
   console.log(persons)
 
   const addPerson = (event) => {
     event.preventDefault()
-
     for (const person of persons) {
       if (person.name === newName) {
         alert(`${newName} is already added to phonebook`)
@@ -36,11 +30,33 @@ const App = () => {
       }
     }
 
-    setPersons(persons.concat({
+    const newPerson = {
       name: newName,
-      number: newNumber,
-      id: persons.length + 1
-    }))
+      number: newNumber
+    }
+
+    personService
+      .create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      }
+    )
+  }
+
+  const handleDelete = (event, person) => {
+    event.preventDefault()
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService
+        .remove(person.id)
+        .then(deletedPerson => {
+            setPersons(persons.filter(person => person.id !== deletedPerson.id))
+            setNewName('')
+            setNewNumber('')
+          }
+        )
+    }
   }
 
   const filteredPersons = filter === '' 
@@ -63,7 +79,7 @@ const App = () => {
         onNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons personList={filteredPersons}/>
+      <Persons personList={filteredPersons} onDelete={handleDelete}/>
     </div>
   )
 }
