@@ -11,7 +11,10 @@ const getAll = () => {
                 return {
                     id: nanoid(),
                     name: data.name.common,
-                    capital: data.capital,
+                    capital: {
+                        name: data.capital,
+                        latlng: data.capitalInfo.latlng
+                    },
                     area: data.area,
                     languages: data.languages,
                     flags: data.flags
